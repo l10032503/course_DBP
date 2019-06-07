@@ -32,7 +32,8 @@ BEGIN
    SELECT SUM(c.c_credit)
    INTO courseSUM
    FROM course c, enroll e
-   WHERE e.s_id = studentID AND e.c_id = c.c_id and e.c_number = c.c_number;
+   WHERE e.s_id = studentID AND e.c_id = c.c_id AND e.c_number = c.c_number AND e.c_year = nYEAR AND e.c_semester = nSEMESTER
+	AND c.c_year = nYEAR AND c.c_semester = nSEMESTER;
    
    IF courseSUM IS NULL THEN
       courseSUM := 0;
@@ -41,7 +42,7 @@ BEGIN
    SELECT c_credit
    INTO courseCREDIT
    FROM course
-   WHERE c_id = courseID AND c_number = courseIDNO;
+   WHERE c_id = courseID AND c_number = courseIDNO AND c_year = nYEAR AND c_semester = nSEMESTER;
    
    DBMS_OUTPUT.put_line(courseSUM || ' / ' || courseCREDIT);
    
@@ -60,7 +61,7 @@ BEGIN
    SELECT c_max, c_current
    INTO courseMAX, courseCURRENT
    FROM course
-   WHERE c_id = courseID AND c_number = courseIDNO;
+   WHERE c_id = courseID AND c_number = courseIDNO AND c_year = nYEAR AND c_semester = nSEMESTER;
 
    DBMS_OUTPUT.put_line(courseMAX || ' / ' || courseCURRENT);
 
@@ -72,26 +73,28 @@ BEGIN
    SELECT COUNT(*)
    INTO periodCOUNT1
    FROM course c
-   WHERE c.c_id = courseID AND c.c_period IN (SELECT c.c_period
+   WHERE c.c_id = courseID AND c_number = courseIDNO AND c.c_year = nYEAR AND c.c_semester = nSEMESTER AND c.c_period1 IN (SELECT c.c_period1
          FROM enroll e, course c 
          WHERE e.s_id = studentID AND e.c_id = c.c_id AND c.c_id != courseID AND e.c_number = c.c_number 
-                     AND (e.c_id, e.c_number) IN (
+                     AND e.c_year = nYEAR AND e.c_semester = nSEMESTER AND c.c_year = nYEAR AND c.c_semester = nSEMESTER
+	        AND (e.c_id, e.c_number) IN (
                      SELECT enrolled_c.c_id, enrolled_c.c_number
                      FROM course new_c INNER JOIN course enrolled_c
                      ON new_c.c_day1 = enrolled_c.c_day1
-                     WHERE new_c.c_id = courseID));
+                     WHERE new_c.c_id = courseID AND new_c.c_number = courseIDNO));
 
    SELECT COUNT(*)
    INTO periodCOUNT2
    FROM course c
-   WHERE c.c_id = courseID AND c.c_period IN (SELECT c.c_period
+   WHERE c.c_id = courseID AND c_number = courseIDNO AND c.c_year = nYEAR AND c.c_semester = nSEMESTER AND c.c_period2 IN (SELECT c.c_period2
          FROM enroll e, course c 
          WHERE e.s_id = studentID AND e.c_id = c.c_id AND c.c_id != courseID AND e.c_number = c.c_number 
-                     AND (e.c_id, e.c_number) IN (
+                     AND e.c_year = nYEAR AND e.c_semester = nSEMESTER AND c.c_year = nYEAR AND c.c_semester = nSEMESTER
+	        AND (e.c_id, e.c_number) IN (
                      SELECT enrolled_c.c_id, enrolled_c.c_number
                      FROM course new_c INNER JOIN course enrolled_c
                      ON new_c.c_day2 = enrolled_c.c_day2
-                     WHERE new_c.c_id = courseID));
+                     WHERE new_c.c_id = courseID AND new_c.c_number = courseIDNO));
 
    DBMS_OUTPUT.put_line(periodCOUNT1 || ' / ' || periodCOUNT2);
 
@@ -104,11 +107,8 @@ BEGIN
    
    UPDATE course
    SET c_current = courseCURRENT + 1
-   WHERE c_id = courseID AND c_number = courseIDNO;
+   WHERE c_id = courseID AND c_number = courseIDNO AND c_year = nYEAR AND c_semester = nSEMESTER;
 
-   UPDATE student
-   SET s_credit = (courseSUM + courseCREDIT)
-   WHERE s_id = studentID;
 
    result := '수강신청이 완료되었습니다.';
    DBMS_OUTPUT.put_line(result);

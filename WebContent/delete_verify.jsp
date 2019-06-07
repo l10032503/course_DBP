@@ -1,14 +1,17 @@
-<%@ page contentType="text/html; charset=EUC-KR" %>
+<%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.sql.*" %>
-<html><head><title> ¼ö°­½ÅÃ» ÀÔ·Â </title></head>
+<html><head><title> ìˆ˜ê°•ì‹ ì²­ ìž…ë ¥ </title></head>
+<div id = "formDialogDiv" style = "display : none;">
+   <%@ include file = "top.jsp" %>
+</div>
 <body>
 <%
 
-	String s_id = (String)session.getAttribute("user");
+	String userid = (String)session.getAttribute("user");
 	String c_id=request.getParameter("c_id");
 	int c_id_no = Integer.parseInt(request.getParameter("c_id_no"));
 	System.out.println(c_id);
-	System.out.println(s_id);
+	System.out.println(userid);
 %>	
 <%	
 	String dbdriver = "oracle.jdbc.driver.OracleDriver";
@@ -18,7 +21,7 @@
 	Connection myConn = null;
 	String result = null;
 	ResultSet rs = null;
-	PreparedStatement pstmt = null;
+	CallableStatement cstmt = null;
 
 	
 	try{
@@ -26,46 +29,51 @@
 		myConn = DriverManager.getConnection(dburl, user, passwd);
 	}catch (ClassNotFoundException e){
 		e.printStackTrace();
-		System.out.println("jdbc driver ·Îµù ½ÇÆÐ");
+		System.out.println("jdbc driver ë¡œë”© ì‹¤íŒ¨");
 	}catch (SQLException e){
 		e.printStackTrace();
-		System.out.println("¿À¶óÅ¬ ¿¬°á ½ÇÆÐ");
+		System.out.println("ì˜¤ë¼í´ ì—°ê²° ì‹¤íŒ¨");
+	}
+	if(session_id.length()==7){
+	cstmt = myConn.prepareCall("{call deleteEnroll(?,?,?)}",
+	         ResultSet.TYPE_SCROLL_SENSITIVE,
+	           ResultSet.CONCUR_READ_ONLY);
+	   cstmt.setString(1, userid);
+	   cstmt.setString(2, c_id);
+	   cstmt.setInt(3,c_id_no);
 	}
 	
-    String sql = "delete from enroll where c_id = ? and c_number = ?";
-    System.out.println("c_id :"+c_id + " / c_number: " + c_id_no);
-	pstmt = myConn.prepareStatement(sql);
-	pstmt.setString(1,c_id);
-	pstmt.setInt(2,c_id_no);
-//	rs= pstmt.executeUpdate();
-	pstmt.executeUpdate();
-
 	
+	if(session_id.length()==5){
+		System.out.println("ì–´ì©Œêµ¬");
+		cstmt = myConn.prepareCall("{call deleteEnrollprof(?,?,?)}",
+		         ResultSet.TYPE_SCROLL_SENSITIVE,
+		           ResultSet.CONCUR_READ_ONLY);
+		   cstmt.setString(1, userid);
+		   cstmt.setString(2, c_id);
+		   cstmt.setInt(3,c_id_no);
+	}
 	
-	/*
-	boolean besult = rs.next();
-	System.out.println(besult);
-	if(besult) {
-		System.out.print(rs.getInt("s_credit"));
-	}*/
-	/*
-	CallableStatement cstmt = myConn.prepareCall("{call DeleteEnroll()}",
-			ResultSet.TYPE_SCROLL_SENSITIVE,
-	        ResultSet.CONCUR_READ_ONLY);
-	
-	
-	cstmt.execute();
-		*/
-		%>
-		<script>
-		alert("¼ö°­½ÅÃ»ÀÌ Ãë¼ÒµÇ¾ú½À´Ï´Ù.");
-		location.href="delete2.jsp";
-		</script>
-		<%
-		
-		
-		
-		 myConn.commit(); pstmt.close(); myConn.close(); 
+	   try {
+		   
+		      cstmt.execute();
+		      System.out.println("executed");
+		      result = "ìˆ˜ê°•ì‹ ì²­ì´ ì·¨ì†Œë˜ì—ˆìŠµë‹ˆë‹¤.";
+		      //result = cstmt.getString(6);
+		      %>
+		      <script>
+		      alert("<%= result %>");
+		      location.href="delete.jsp";
+		      </script>
+		      <%
+		      } catch(SQLException ex) {
+		      System.err.println("SQLException: " + ex.getMessage());
+		      }
+		      finally {
+		      if (cstmt != null)
+		      try { myConn.commit(); cstmt.close(); myConn.close(); }
+		      catch(SQLException ex) { }
+		      }
 		
 	//pstmt.close();
 	//myConn.close();

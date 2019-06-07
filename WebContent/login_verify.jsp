@@ -14,14 +14,30 @@
 	try{
 		Class.forName(dbdriver);
 		Connection myConn = DriverManager.getConnection(dburl, user, passwd);
+		String mySQL = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+		boolean result = false;
 		
-		String mySQL = "select s_id, s_name from student where s_id='" + userID + "' and s_pwd='" + userPassword + "'"; 
-		Statement stmt = myConn.createStatement();
-		ResultSet rs = stmt.executeQuery(mySQL);
+		if(userID.length() == 7){
+			mySQL = "select s_id, s_name from student where s_id='" + userID + "' and s_pwd='" + userPassword + "'"; 
+			stmt = myConn.createStatement();
+			rs = stmt.executeQuery(mySQL);
+			
+			System.out.println(mySQL);
+			result = rs.next();
+			System.out.println(result);
+			
+		}else{
+			mySQL = "select p_id, p_name from professor where p_id='" + userID + "' and p_pwd='" + userPassword + "'"; 
+			stmt = myConn.createStatement();
+			rs = stmt.executeQuery(mySQL);
+			
+			System.out.println(mySQL);
+			result = rs.next();
+			System.out.println(result);
+		}
 		
-		System.out.println(mySQL);
-		boolean result = rs.next();
-		System.out.println(result);
 		
 		if(result) {
 			session.setAttribute("user", session_id);
