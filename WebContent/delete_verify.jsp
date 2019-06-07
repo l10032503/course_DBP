@@ -1,9 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.sql.*" %>
 <html><head><title> 수강신청 입력 </title></head>
-<div id = "formDialogDiv" style = "display : none;">
-   <%@ include file = "top.jsp" %>
-</div>
+
 <body>
 <%
 
