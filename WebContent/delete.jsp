@@ -92,7 +92,7 @@
 <%
 	Connection myConn = null;     
 	Statement stmt = null;
-	ResultSet myResultSet = null;   String mySQL = "";
+	ResultSet myResultSet = null; 
 	String dburl = "jdbc:oracle:thin:@localhost:1521:orcl";
 	String user="sook";     String passwd="2019";
     String dbdriver = "oracle.jdbc.driver.OracleDriver";    
@@ -106,13 +106,15 @@
 		
 		Class.forName(dbdriver);
 	    myConn =  DriverManager.getConnection (dburl, user, passwd);
-		stmt = myConn.createStatement();	
+		stmt = myConn.createStatement();	//전진과 읽기만 가능한 resultset 생성
 
     } catch(SQLException ex) {
 	     System.err.println("SQLException: " + ex.getMessage());
     }
 	
-	if(session_id.length() == 5){
+	if(session_id.length() == 5){	
+		//저장펑션을 위한 CallableStatement에 들어가는 sql문
+		//교수가 현재 담당하는 강의가 몇 학점인지 알려주는 함수
 		String creditSQL = "{? = call get_prof_credit(?)}";
 	  	CallableStatement cstmt = myConn.prepareCall(creditSQL);
 	  	cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
@@ -126,6 +128,8 @@
 		</div>
 		<%
 	}else if (session_id.length() == 7){
+		//저장펑션을 위한 CallableStatement에 들어가는 sql문
+		//학생이 현재 수강하는 강의가 몇 학점인지 알려주는 함수
 		String creditSQL = "{? = call get_stu_credit(?)}";
 		CallableStatement cstmt = myConn.prepareCall(creditSQL);
 		cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
@@ -168,8 +172,8 @@
       </tr>
 <%
 
-	mySQL="select * from course";
 	
+	//교수와 학생을 sessionID 길이로 구분하여 삭제 할 수 있는 과목 리스트를 띄워주게 할 sql문
     if(session_id.length() == 7){
  	    sql = "select * from COURSE c, enroll e WHERE c.c_id = e.c_id AND c.c_number = e.c_number AND e.s_id ='" + session_id +
     		 "' AND e.c_year = 2019 AND e.c_semester = 2 AND c.c_year = 2019 AND c.c_semester = 2";
@@ -186,6 +190,7 @@
 		
 	while (myResultSet.next()) {
 		
+		//result 객체로 데이터를 가져옵니다
 		String c_id = myResultSet.getString("c_id");//과목번호
 		String c_name = myResultSet.getString("c_name");//과목명
 	
@@ -244,10 +249,10 @@
 		c_time = c_time + " " + c_period2 + " 교시";
 		
 		String pSQL = "select p_name from professor where p_id = '" + p_id + "'";
-		Statement prof_stmt = myConn.createStatement();
+		Statement prof_stmt = myConn.createStatement();//전진과 읽기만 가능한 resultset 생성
 		ResultSet rs = prof_stmt.executeQuery(pSQL);
 		rs.next();
-		String p_name = rs.getString("p_name");
+		String p_name = rs.getString("p_name"); //result객체로 데이터 가져오기
 		
 		
 %>

@@ -141,6 +141,9 @@
 			Class.forName(dbdriver);
 		    myConn =  DriverManager.getConnection (dburl, user, passwd);
 		    String sql = "select * from COURSE where c_year = ? and c_semester = ? order by c_id";
+		    
+		    //sql문은 그대로인데 데이터만 바뀌는 경우를 위해 preparedStatement를 이용
+		    //set메소드로 데이터를 해당되는 물음표 위치에 대치시킨다
 			pstmt = myConn.prepareStatement(sql);
 			pstmt.setInt(1, year);
 			pstmt.setInt(2,semester);
@@ -152,6 +155,8 @@
 %>
 <% 
 	if(session_id.length() == 7){
+		//저장펑션을 위한 CallableStatement에 들어가는 sql문
+		//학생이 현재 수강하는 강의가 몇 학점인지 알려주는 함수
 		String creditSQL = "{? = call get_stu_credit(?)}";
 		CallableStatement cstmt = myConn.prepareCall(creditSQL);
 		cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
@@ -273,7 +278,7 @@
 		int c_credit= myResultSet.getInt("c_credit");
 		
 		String mySQL = "select p_name from professor where p_id = '" + p_id + "'";
-		Statement prof_stmt = myConn.createStatement();
+		Statement prof_stmt = myConn.createStatement();//전진과 읽기만 가능한 resultset 생성
 		ResultSet rs = prof_stmt.executeQuery(mySQL);
 		rs.next();
 		String p_name = rs.getString("P_NAME");
