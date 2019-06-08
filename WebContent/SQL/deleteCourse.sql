@@ -1,7 +1,7 @@
-CREATE OR REPLACE PROCEDURE deleteEnroll(studentID IN VARCHAR2, courseID IN VARCHAR2,
+CREATE OR REPLACE PROCEDURE deleteCourse(profID IN VARCHAR2, courseID IN VARCHAR2,
                courseIDNO IN NUMBER)
 IS
-  
+
    coursecurrent NUMBER;
    nYEAR NUMBER;
    nSEMESTER NUMBER;
@@ -11,10 +11,6 @@ BEGIN
    
    nYEAR := Date2EnrollYear(SYSDATE);
    nSEMESTER := Date2EnrollSemester(SYSDATE);
-   
-   DBMS_OUTPUT.put_line(studentID || ' / ' || courseID ||
-   ' / ' || courseIDNO );
-   
  
 select c_current, c_credit
 into coursecurrent, courseCREDIT
@@ -25,10 +21,12 @@ UPDATE COURSE
 SET c_current = coursecurrent -1
 where c_id = courseID AND c_number = courseIDNO AND c_year = nYEAR AND c_semester = nSEMESTER;
 
-
-
 DELETE FROM ENROLL
 where c_id = courseID AND c_number = courseIDNO AND c_year = nYEAR AND c_semester = nSEMESTER;
+
+DELETE FROM COURSE
+where c_id = courseID AND c_number = courseIDNO AND c_year = nYEAR AND c_semester = nSEMESTER;
+
 
    
 COMMIT;

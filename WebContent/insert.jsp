@@ -82,21 +82,12 @@
 <div id="table-header">
 <%
 	int year_semester = 0;
-	if( request.getParameter("year_semester") == null){
-		year_semester = 201902;
-	}else{
+
+	if(request.getParameter("year_semester") == null)
+		year_semester = 201902;	
+	else
 		year_semester = Integer.parseInt(request.getParameter("year_semester"));
-	}
-	System.out.println(session_id);
-	System.out.println(session_id == null);
-	if (session_id == null){
-		System.out.println(session_id);
-		response.sendRedirect("login.jsp");
-		return;
-	}else{
-		System.out.println(session_id);
-	}
-	
+
 	int year = year_semester / 100;
 	int semester = year_semester % 100;
 	
@@ -146,11 +137,10 @@
 	String dbdriver = "oracle.jdbc.driver.OracleDriver"; 
 	int isLeaved = 0;
 	
-	try {
-					
+	try {		
 			Class.forName(dbdriver);
 		    myConn =  DriverManager.getConnection (dburl, user, passwd);
-		    String sql = "select * from COURSE where c_year = ? and c_semester = ?";
+		    String sql = "select * from COURSE where c_year = ? and c_semester = ? order by c_id";
 			pstmt = myConn.prepareStatement(sql);
 			pstmt.setInt(1, year);
 			pstmt.setInt(2,semester);
@@ -207,6 +197,7 @@
          <th>과목번호</th>
          <th>분반</th>
          <th>과목명</th>
+         <th>전공</th>
          <th>교수</th>
          <th>시간</th>
          <th>학점</th>
@@ -216,18 +207,15 @@
       </tr>
 <%
 
-
-	//mySQL = "select c_id,c_id_no,c_name,c_unit from course where c_id not in (select c_id from enroll where s_id='" + session_id + "')";
 	myResultSet = pstmt.executeQuery();
-	System.out.println("myresultset"+myResultSet);
 
 	if (myResultSet != null) {
 	while (myResultSet.next()) {
 		
-		
 		String c_id = myResultSet.getString("c_id");//과목번호
 		int c_number = myResultSet.getInt("c_number");//분반
 		String c_name = myResultSet.getString("c_name");//과목명
+		String c_major = myResultSet.getString("c_major");//과목명
 		int p_id = myResultSet.getInt("p_id");
 		int c_day1 = myResultSet.getInt("c_day1");
 		int c_day2 = myResultSet.getInt("c_day2");
@@ -282,7 +270,7 @@
 		
 		c_time = c_time + " " + c_period2 + "교시";
 		
-		int c_credit= myResultSet.getInt("c_credit");//학점
+		int c_credit= myResultSet.getInt("c_credit");
 		
 		String mySQL = "select p_name from professor where p_id = '" + p_id + "'";
 		Statement prof_stmt = myConn.createStatement();
@@ -295,6 +283,7 @@
   <td align="center"><%= c_id %></td>
   <td align="center"><%= c_number %></td> 
   <td align="center"><%= c_name %></td>
+  <td align="center"><%= c_major %></td>
   <td align="center"><%= p_name %></td>
   <td align="center"><%= c_time %></td>
   <td align="center"><%= c_credit %></td>
@@ -315,9 +304,7 @@
 <%
 		}
 	}
-	//stmt.close(); 
-	//pstmt.close();
-	//myConn.close();
+
 %>
 </table>
           	

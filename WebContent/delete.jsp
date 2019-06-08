@@ -1,7 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
 <%@ page import="java.sql.*"  %>
 
-   <%@ include file = "top.jsp" %>
+<%@ include file = "top.jsp" %>
+
 
 <html>
 <head>
@@ -89,55 +90,56 @@
 	return;
 }%>
 <%
-Connection myConn = null;     
-Statement stmt = null;
-	PreparedStatement pstmt = null;
+	Connection myConn = null;     
+	Statement stmt = null;
 	ResultSet myResultSet = null;   String mySQL = "";
 	String dburl = "jdbc:oracle:thin:@localhost:1521:orcl";
 	String user="sook";     String passwd="2019";
-     String dbdriver = "oracle.jdbc.driver.OracleDriver";    
-     session_id=(String)session.getAttribute("user");
-     String sql="";
- 	
-
-     
-  //   else
-   // 	 sql = "select * from course c, enroll e whre c.p_id ='" + session_id +"'";
-
-     
-	System.out.println("sessionid:"+session_id);
-     
-     String id = request.getParameter("userID");
-     String pwd = request.getParameter("userPassword");
+    String dbdriver = "oracle.jdbc.driver.OracleDriver";    
+    session_id=(String)session.getAttribute("user");
+    String sql="";
+ 	 
+    String id = request.getParameter("userID");
+    String pwd = request.getParameter("userPassword");
 	int cmax = 30;
 	try {
-		
-	///	int result = stmt.executeQuery(sql);
 		
 		Class.forName(dbdriver);
 	    myConn =  DriverManager.getConnection (dburl, user, passwd);
 		stmt = myConn.createStatement();	
-		pstmt = myConn.prepareStatement(sql);
-	//	pstmt.setString(1,"C1234");
-//		pstmt.setString(2,pwd);
-		
-		
+
     } catch(SQLException ex) {
 	     System.err.println("SQLException: " + ex.getMessage());
     }
 	
-	String creditSQL = "{? = call get_prof_credit(?)}";
-  	CallableStatement cstmt = myConn.prepareCall(creditSQL);
-  	cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
-  	cstmt.setString(2, session_id);
-  	cstmt.execute();
-	int s_credit = cstmt.getInt(1);
+	if(session_id.length() == 5){
+		String creditSQL = "{? = call get_prof_credit(?)}";
+	  	CallableStatement cstmt = myConn.prepareCall(creditSQL);
+	  	cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
+	  	cstmt.setString(2, session_id);
+	  	cstmt.execute();
+		int p_credit = cstmt.getInt(1);
+		%>
+	
+		<div id="current-credit">
+			<p>현재 개설한 강의 : <%= p_credit %> 학점</p>
+		</div>
+		<%
+	}else if (session_id.length() == 7){
+		String creditSQL = "{? = call get_stu_credit(?)}";
+		CallableStatement cstmt = myConn.prepareCall(creditSQL);
+		cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
+		cstmt.setString(2, session_id);
+		cstmt.execute();
+		int s_credit = cstmt.getInt(1);
 %>
-/
+
 <div id="current-credit">
 	<p>현재 신청한 학점 : <%= s_credit %></p>
 </div>
-
+<%
+	}
+%>
 
 </div>
 	<!-- Content Wrapper -->
@@ -162,47 +164,31 @@ Statement stmt = null;
          <th>교수</th>
          <th>시간</th>
          <th>학점</th>
-         <th>수강신청</th>
+         <th>수강취소</th>
       </tr>
 <%
 
-//mySQL = "select c_id,c_id_no,c_name,c_unit from course where c_id not in (select c_id from enroll where s_id='" + session_id + "')";
 	mySQL="select * from course";
 	
     if(session_id.length() == 7){
  	    sql = "select * from COURSE c, enroll e WHERE c.c_id = e.c_id AND c.c_number = e.c_number AND e.s_id ='" + session_id +
     		 "' AND e.c_year = 2019 AND e.c_semester = 2 AND c.c_year = 2019 AND c.c_semester = 2";
-     //session_id = session.getId();
      }
-    
-    int s =  Integer.parseInt(session_id);
-     
-    if(session_id.length()==5){
-    	 System.out.println("dd");
-    	// sql = "select * from course c where c.p_id = '" + session_id +"'";
-    	 
+         
+    if(session_id.length() == 5){ 
     	 sql = "select distinct * from COURSE c, professor p WHERE c.p_id = p.p_id AND p.p_id = '" + session_id +
-        		 "' AND c.c_year = 2019 AND c.c_semester = 2";     
-  	    
+        		 "' AND c.c_year = 2019 AND c.c_semester = 2";         
     }
 	
 	myResultSet = stmt.executeQuery(sql);
 
-
-	//myResultSet = pstmt.executeQuery();
-	System.out.println("myreslutset"+myResultSet);
-
 	if (myResultSet != null) {
-		System.out.println("inside if");
+		
 	while (myResultSet.next()) {
 		
-		System.out.println("inside while");
 		String c_id = myResultSet.getString("c_id");//과목번호
 		String c_name = myResultSet.getString("c_name");//과목명
-	//	System.out.println("c_id:"+c_id);
-	//	System.out.println("c_name"+c_name);
-
-		
+	
 		int c_credit= myResultSet.getInt("c_credit");//학점			
 		int c_number = myResultSet.getInt("c_number");//분반
 		int p_id = myResultSet.getInt("p_id");
@@ -211,7 +197,7 @@ Statement stmt = null;
 		int c_period1 = myResultSet.getInt("c_period1");
 		int c_period2 = myResultSet.getInt("c_period2");
 		
-String c_time = "";
+		String c_time = "";
 		
 		switch(c_day1){
 		case 1:
@@ -277,9 +263,7 @@ String c_time = "";
 <%
 		}
 	}
-	//stmt.close(); 
-	//pstmt.close();
-	//myConn.close();
+
 %>
 </table>
 
