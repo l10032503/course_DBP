@@ -51,13 +51,12 @@
 		//저장 프로시저를 부르기 위한 callable statement의 이용
 		//교수가 개설한 과목을 없애면 해당 프로시저가 실행된다
 		//스크롤 옵션과 동시성 옵션을 주었다
-		cstmt = myConn.prepareCall("{call deleteCourse(?,?,?)}",
+		cstmt = myConn.prepareCall("{call deleteCourse(?,?)}",
 		        ResultSet.TYPE_SCROLL_SENSITIVE,
 		        ResultSet.CONCUR_READ_ONLY);
-		
-		cstmt.setString(1, session_id);
-		cstmt.setString(2, c_id);
-		cstmt.setInt(3,c_id_no);
+
+		cstmt.setString(1, c_id);
+		cstmt.setInt(2,c_id_no);
 	}
 	
 	
