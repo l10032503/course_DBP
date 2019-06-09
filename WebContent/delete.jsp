@@ -92,6 +92,8 @@
 <%
 	Connection myConn = null;     
 	Statement stmt = null;
+	CallableStatement cstmt = null;
+
 	ResultSet myResultSet = null; 
 	String dburl = "jdbc:oracle:thin:@localhost:1521:orcl";
 	String user="sook";     String passwd="2019";
@@ -102,6 +104,7 @@
     String id = request.getParameter("userID");
     String pwd = request.getParameter("userPassword");
 	int cmax = 30;
+	int credit=0;
 	try {
 		
 		Class.forName(dbdriver);
@@ -115,31 +118,36 @@
 	if(session_id.length() == 5){	
 		//저장펑션을 위한 CallableStatement에 들어가는 sql문
 		//교수가 현재 담당하는 강의가 몇 학점인지 알려주는 함수
-		String creditSQL = "{? = call get_prof_credit(?)}";
-	  	CallableStatement cstmt = myConn.prepareCall(creditSQL);
-	  	cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
-	  	cstmt.setString(2, session_id);
-	  	cstmt.execute();
-		int p_credit = cstmt.getInt(1);
+			sql = "{? = call get_prof_credit(?,?,?)}";
+			cstmt = myConn.prepareCall(sql);
+			cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
+			cstmt.setString(2, session_id);
+			cstmt.setInt(3, 2019);
+			cstmt.setInt(4, 2);
+			cstmt.execute();
+			credit = cstmt.getInt(1);
+
 		%>
 	
 		<div id="current-credit">
-			<p>현재 개설한 강의 : <%= p_credit %> 학점</p>
+			<p>현재 개설한 강의 : <%= credit %> 학점</p>
 		</div>
 		<%
 	}else if (session_id.length() == 7){
 		//저장펑션을 위한 CallableStatement에 들어가는 sql문
 		//학생이 현재 수강하는 강의가 몇 학점인지 알려주는 함수
-		String creditSQL = "{? = call get_stu_credit(?)}";
-		CallableStatement cstmt = myConn.prepareCall(creditSQL);
-		cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
-		cstmt.setString(2, session_id);
-		cstmt.execute();
-		int s_credit = cstmt.getInt(1);
+			sql = "{? = call get_stu_credit(?,?,?)}";
+			cstmt = myConn.prepareCall(sql);
+			cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
+			cstmt.setString(2, session_id);
+			cstmt.setInt(3, 2019);
+			cstmt.setInt(4, 2);
+			cstmt.execute();
+			credit = cstmt.getInt(1);
 %>
 
 <div id="current-credit">
-	<p>현재 신청한 학점 : <%= s_credit %></p>
+	<p>현재 신청한 학점 : <%= credit %></p>
 </div>
 <%
 	}

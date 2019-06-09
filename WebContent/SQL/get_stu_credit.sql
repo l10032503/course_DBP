@@ -1,5 +1,7 @@
 CREATE OR REPLACE FUNCTION get_stu_credit(
-session_id IN VARCHAR2
+session_id IN VARCHAR2,
+nYear IN NUMBER,
+nSemester IN NUMBER
 )
 RETURN NUMBER
 IS
@@ -12,7 +14,10 @@ from course
 where (c_id, c_number, c_year, c_semester) IN
 (select e.c_id, e.c_number, e.c_year, e.c_semester
 from enroll e, student s
-where e.s_id = s.s_id and s.s_id = session_id);
+where e.s_id = s.s_id 
+and s.s_id = session_id 
+and e.c_year = nYear 
+and e.c_semester = nSemester);
 
 RETURN v_credit;
 
