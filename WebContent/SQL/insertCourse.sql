@@ -6,6 +6,7 @@ CREATE OR REPLACE PROCEDURE InsertCourse(professorID IN VARCHAR2, courseID IN VA
 			courseDAY2 IN NUMBER, coursePERIOD2 IN NUMBER,
 			result OUT VARCHAR2)
 IS
+	wrong_course_id EXCEPTION;
 	minimum_credit EXCEPTION;
 	maximum_credit EXCEPTION;
 	credit_limit_over EXCEPTION;
@@ -22,7 +23,7 @@ IS
 
 	courseSUM NUMBER;
 	courseCOUNT NUMBER;
-	courseORIGINNAME VARCHAR2(50);
+	courseUPPERID VARCHAR2(50);
 	courseNUMBER NUMBER;
 	periodCOUNT1 NUMBER;
 	periodCOUNT2 NUMBER;
@@ -37,10 +38,24 @@ BEGIN
 	result := ' ';
 	nYEAR := Date2EnrollYear(SYSDATE);
 	nSEMESTER := Date2EnrollSemester(SYSDATE);
-
-	DBMS_OUTPUT.put_line(professorID || ' / ' || courseID ||
-   	' / ' || courseIDNO );
+	courseUPPERID := UPPER(courseID);
 	
+	DBMS_OUTPUT.put_line(professorID || ' / ' || courseUPPERID ||
+   	' / ' || courseIDNO || ' / ' || courseNAME);
+	
+	/*잘못된 과목 이름*/
+	IF IS_NUMBER(SUBSTR(courseID,2,3)) != 1 THEN
+		RAISE wrong_course_id;
+	END IF;
+
+	IF UPPER(substr(courseID,1,1)) = LOWER(substr(courseID,1,1)) THEN --알파벳 유무를 판별하는 것이며 꼭 C가 아니어도 됨
+		RAISE wrong_course_id;
+	END IF;
+ 
+	IF LENGTH(courseID) != 5 THEN
+		RAISE wrong_course_id;
+	END IF;
+
 	/*첫번째 날과 두번째 날이 같은날*/
 	IF courseDAY1 = courseDAY2 THEN
 		RAISE same_days;
@@ -91,7 +106,7 @@ BEGIN
 	SELECT count(*)
 	INTO courseCOUNT
 	FROM course
-	WHERE c_id = courseID AND c_number = courseIDNO AND c_year = nYEAR AND c_semester = nSEMESTER;
+	WHERE c_id = courseUPPERID AND c_number = courseIDNO AND c_year = nYEAR AND c_semester = nSEMESTER;
 
 	DBMS_OUTPUT.put_line(courseCOUNT);
 
@@ -103,7 +118,7 @@ BEGIN
 	SELECT NVL(MAX(c_number),0)
 	INTO courseNUMBER
 	FROM course
-	WHERE c_id = courseID AND c_year = nYEAR AND c_semester = nSEMESTER;
+	WHERE c_id = courseUPPERID AND c_year = nYEAR AND c_semester = nSEMESTER;
 
 	DBMS_OUTPUT.put_line(courseNUMBER);	
 
@@ -115,7 +130,7 @@ BEGIN
 	SELECT count(*)
 	INTO courseCOUNT
 	FROM course
-	WHERE c_name = courseNAME AND c_year = nYEAR AND c_semester = nSEMESTER AND c_id != courseID;
+	WHERE c_name = courseNAME AND c_year = nYEAR AND c_semester = nSEMESTER AND c_id != courseUPPERID;
 
 	DBMS_OUTPUT.put_line(courseCOUNT);
 
@@ -127,7 +142,7 @@ BEGIN
 	SELECT count(*)
 	INTO courseCOUNT
 	FROM course
-	WHERE c_id = courseID;
+	WHERE c_id = courseUPPERID;
 
 	DBMS_OUTPUT.put_line(courseCOUNT);
 
@@ -135,7 +150,7 @@ BEGIN
 		SELECT count(*)
 		INTO courseCOUNT
 		FROM course
-		WHERE c_id = courseID AND c_name != courseNAME;
+		WHERE c_id = courseUPPERID AND c_name != courseNAME;
 
 		IF courseCOUNT>0 THEN
 			RAISE diffrent_course_name;
@@ -194,7 +209,7 @@ BEGIN
 
 	INSERT INTO course(c_id, c_name, c_position, c_year, c_semester, p_id, c_credit, c_number,c_major,
 			c_day1, c_day2, c_period1, c_period2, c_max, c_current)
-   	VALUES (courseID, courseNAME, coursePosition, nYEAR, nSEMESTER, professorID, courseCREDIT, courseIDNO, courseMAJOR,
+   	VALUES (courseUPPERID, courseNAME, coursePosition, nYEAR, nSEMESTER, professorID, courseCREDIT, courseIDNO, courseMAJOR,
 			tempDAY1, tempDAY2, tempPERIOD1, tempPERIOD2, courseMAX, 0);
 
 
@@ -203,9 +218,13 @@ BEGIN
 	DBMS_OUTPUT.put_line(result);
 
 	COMMIT;
+	
 EXCEPTION
    WHEN NO_DATA_FOUND THEN
       DBMS_OUTPUT.put_line('no data found');
+  WHEN wrong_course_id THEN
+      result := '잘못된 과목번호 입니다.';
+      DBMS_OUTPUT.put_line(result);
    WHEN minimum_credit THEN
       result := '최소 학점은 1학점입니다.';
       DBMS_OUTPUT.put_line(result);
