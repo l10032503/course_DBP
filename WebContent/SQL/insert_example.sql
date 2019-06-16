@@ -5,11 +5,9 @@ insert into enroll values ('1912345', 'C1238',2,2019,1);
 
 insert into enroll values ('1912345', 'C1229',1,2018,2);
 insert into enroll values ('1912345', 'C1297',1,2018,2);
-insert into enroll values ('1912345', 'C2234',1,2018,2);
 
 insert into enroll values ('1912345', 'C1207',1,2018,1);
-insert into enroll values ('1912345', 'C2456',1,2018,1);
-insert into enroll values ('1912345', 'C2567',1,2018,1);
+
 
 insert into professor values ('30303','1111','심준호','컴퓨터과학부');
 insert into professor values ('33333','1111','박숙영','컴퓨터과학부');

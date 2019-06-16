@@ -80,7 +80,7 @@ BEGIN
 	        AND (e.c_id, e.c_number) IN (
                      SELECT enrolled_c.c_id, enrolled_c.c_number
                      FROM course new_c INNER JOIN course enrolled_c
-                     ON new_c.c_day1 = enrolled_c.c_day1
+                     ON new_c.c_day1 = enrolled_c.c_day1 AND new_c.c_year = enrolled_c.c_year AND  new_c.c_semester = enrolled_c.c_semester
                      WHERE new_c.c_id = courseID AND new_c.c_number = courseIDNO));
 
    SELECT COUNT(*)
@@ -93,7 +93,7 @@ BEGIN
 	        AND (e.c_id, e.c_number) IN (
                      SELECT enrolled_c.c_id, enrolled_c.c_number
                      FROM course new_c INNER JOIN course enrolled_c
-                     ON new_c.c_day2 = enrolled_c.c_day2
+                     ON new_c.c_day2 = enrolled_c.c_day2 AND  new_c.c_year = enrolled_c.c_year AND  new_c.c_semester = enrolled_c.c_semester
                      WHERE new_c.c_id = courseID AND new_c.c_number = courseIDNO));
 
    DBMS_OUTPUT.put_line(periodCOUNT1 || ' / ' || periodCOUNT2);
