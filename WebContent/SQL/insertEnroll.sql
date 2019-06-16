@@ -50,7 +50,7 @@ BEGIN
       RAISE credit_limit_over;
    END IF;
 
-   /*중복된 과목*/
+   /*중복된 과목, 지난학기 수강한 과목 신청 불가*/
    FOR course_list IN courseLIST(studentID) LOOP
       IF course_list.c_id = courseID THEN
          RAISE duplicate_course;
