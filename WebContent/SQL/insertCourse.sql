@@ -48,7 +48,7 @@ BEGIN
 		RAISE wrong_course_id;
 	END IF;
 
-	IF UPPER(substr(courseID,1,1)) = LOWER(substr(courseID,1,1)) THEN --알파벳 유무를 판별하는 것이며 꼭 C가 아니어도 됨
+	IF substr(courseUPPERID,1,1) != 'C' THEN
 		RAISE wrong_course_id;
 	END IF;
  
@@ -218,7 +218,6 @@ BEGIN
 	DBMS_OUTPUT.put_line(result);
 
 	COMMIT;
-	
 EXCEPTION
    WHEN NO_DATA_FOUND THEN
       DBMS_OUTPUT.put_line('no data found');
