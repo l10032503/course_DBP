@@ -1,6 +1,6 @@
 insert into student values ('1912345', '1111', '눈송이', 1, '컴퓨터과학부', 0);
+
 insert into enroll values ('1912345', 'C1235',1,2019,1);
-insert into enroll values ('1912345', 'C2134',1,2019,1);
 insert into enroll values ('1912345', 'C1238',2,2019,1);
 
 insert into enroll values ('1912345', 'C1229',1,2018,2);
