@@ -189,8 +189,8 @@
 		CallableStatement cstmt = myConn.prepareCall(creditSQL);
 		cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
 		cstmt.setString(2, session_id);
-		cstmt.setInt(3, year);
-		cstmt.setInt(4, semester);
+		cstmt.setInt(3, 2019);
+		cstmt.setInt(4, 2);
 		cstmt.execute();
 		int credit = cstmt.getInt(1);
 		

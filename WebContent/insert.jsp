@@ -168,14 +168,14 @@
 			CallableStatement cstmt = myConn.prepareCall(creditSQL);
 			cstmt.registerOutParameter(1, java.sql.Types.INTEGER);
 			cstmt.setString(2, session_id);
-			cstmt.setInt(3, year);
-			cstmt.setInt(4, semester);
+			cstmt.setInt(3, 2019);
+			cstmt.setInt(4, 2);
 			cstmt.execute();
 			int s_credit = cstmt.getInt(1);
 			
 	%>
 	<div id="current-credit">
-		<p>현재 신청한 학점 : <%= s_credit %></p>
+		<p>2019년 2학기에 신청한 학점 : <%= s_credit %></p>
 	</div>
 
 	<%}else{

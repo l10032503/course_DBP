@@ -198,7 +198,7 @@
 			credit = cstmt.getInt(1);
 %>
 	<div id = "current-credit">
-		<p>현재 신청한 학점 : <%=credit%></p>
+		<p><%=nYear%>년 <%=nSemester%>학기에 신청한 학점 : <%=credit%></p>
 	</div>
 <%   
 		}
@@ -238,7 +238,7 @@
 			credit = cstmt.getInt(1);
 %>
 	<div id = "current-credit">
-		<p>현재 개설과목의 총 학점 : <%=credit%></p>
+		<p><%=nYear%>년 <%=nSemester%>학기에 개설한 과목의 총 학점 : <%=credit%></p>
 	</div>
 <%   
 		}
