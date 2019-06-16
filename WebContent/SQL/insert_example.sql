@@ -4,6 +4,12 @@ insert into professor values ('30303','1111','심준호','컴퓨터과학부');
 insert into professor values ('33333','1111','박숙영','컴퓨터과학부');
 insert into professor values ('34343','1111','김주균','컴퓨터과학부');
 insert into professor values ('32353','1111', '박영훈' ,'컴퓨터과학부');
+insert into professor values ('30304','1111','이기용','컴퓨터과학부');
+insert into professor values ('30305','1111','최영우','컴퓨터과학부');
+insert into professor values ('30338','1111','이현자','컴퓨터과학부');
+insert into professor values ('32322','1111','채희준','컴퓨터과학부');
+insert into professor values ('38888','1111','창병모','컴퓨터과학부');
+
 insert into professor values ('35555','1111','김교양','기초교양대학');
 insert into professor values ('30001','1111','김경영','경영학부');
 insert into professor values ('30002','1111','김경제','경제학부');
@@ -21,7 +27,7 @@ insert into professor values ('30013','1111','김수학','수학과');
 insert into professor values ('30014','1111','김통계','통계학과');
 insert into professor values ('30015','1111','김체교','체육교육과');
 insert into professor values ('30016','1111','김무용','무용과');
-insert into professor values ('30017','1111','김하공','화공생명공학부');
+insert into professor values ('30017','1111','김화공','화공생명공학부');
 insert into professor values ('30018','1111','김아이티','IT공학전공');
 insert into professor values ('30019','1111','김전공','전자공학전공');
 insert into professor values ('30020','1111','김물리','응용물리전공');
@@ -67,18 +73,28 @@ insert into course values ('C1245','컴파일러', '명신관 202호', 2019, 2, '32353',
 
 
 --2019년 1학기
+insert into course values ('C1235','데이터사이언스개론', '명신관 302호', 2019, 1, '30304',3,1,'컴퓨터과학부', 1,3,2,2,60,60);
+insert into course values ('C1235','데이터사이언스개론', '명신관 304호', 2019, 1, '30305',3,2,'컴퓨터과학부', 1,3,2,2,60,60);
+insert into course values ('C1238','소프트웨어의 이해', '명신관 102호', 2019, 1, '33333',3,1,'컴퓨터과학부', 1,3,4,4,30,29);
+insert into course values ('C1238','소프트웨어의 이해', '명신관 102호', 2019, 1, '30338',3,2,'컴퓨터과학부', 1,3,6,6,30,30);
+insert into course values ('C1238','소프트웨어의 이해', '명신관 102호', 2019, 1, '32322',3,3,'컴퓨터과학부', 1,3,1,1,30,27);
 insert into course values ('C2134','글쓰기와 읽기','명신관 201호', 2019, 1, '35555',2,1,'기초교양대학', 2,4,1,1,30,20);
 insert into course values ('C2234','발표와 토론','명신관 303호', 2019, 1, '35555',2,1,'기초교양대학', 2,4,3,3,30,20);
 insert into course values ('C2456','영어쓰기와 읽기','명신관 421호', 2019, 1, '35555',3,1,'기초교양대학', 2,4,5,5,30,20);
 insert into course values ('C2567','영어발표와 토론','명신관 526호', 2019, 1, '35555',3,1,'기초교양대학', 2,4,6,6,30,20);
 
 --2018년 2학기
+insert into course values ('C1229','디지털 논리회로', '명신관 413호', 2018, 2, '34343',3,1,'컴퓨터과학부', 2,4,1,1,30,30);
+insert into course values ('C1238','자바 프로그래밍', '명신관 303호', 2018, 2, '30338',3,1,'컴퓨터과학부', 1,3,2,2,30,30);
+insert into course values ('C1297','리눅스 시스템', '명신관 303호', 2018, 2, '38888',3,1,'컴퓨터과학부', 1,3,5,5,30,30);
 insert into course values ('C2134','글쓰기와 읽기','명신관 325호', 2018, 2, '35555',2,1,'기초교양대학', 1,3,6,3,30,20);
 insert into course values ('C2234','발표와 토론','명신관 305호', 2018, 2, '35555',2,1,'기초교양대학', 1,3,5,4,30,20);
 insert into course values ('C2456','영어쓰기와 읽기','명신관 411호', 2018, 2, '35555',3,1,'기초교양대학', 1,3,4,5,30,20);
 insert into course values ('C2567','영어발표와 토론','명신관 517호', 2018, 2, '35555',3,1,'기초교양대학', 1,3,3,6,30,20);
 
 --2018년 1학기
+insert into course values ('C1297','프로그래밍 언어론', '명신관 404호', 2018, 1, '38888',3,1,'컴퓨터과학부', 1,3,2,2,50,47);
+insert into course values ('C1297','프로그래밍 언어론', '명신관 404호', 2018, 1, '38888',3,2,'컴퓨터과학부', 2,4,2,2,50,50);
 insert into course values ('C2134','글쓰기와 읽기','명신관 516호', 2018, 1, '35555',2,1,'기초교양대학', 2,4,2,1,30,20);
 insert into course values ('C2234','발표와 토론','명신관 611호', 2018, 1, '35555',2,1,'기초교양대학', 2,4,3,3,30,20);
 insert into course values ('C2456','영어쓰기와 읽기','명신관 213호', 2018, 1, '35555',3,1,'기초교양대학', 1,3,4,5,30,20);

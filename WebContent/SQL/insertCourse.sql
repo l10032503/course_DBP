@@ -38,12 +38,12 @@ BEGIN
 	result := ' ';
 	nYEAR := Date2EnrollYear(SYSDATE);
 	nSEMESTER := Date2EnrollSemester(SYSDATE);
-	courseUPPERID := UPPER(courseID);
+	courseUPPERID := UPPER(courseID); --항상 대문자
 	
 	DBMS_OUTPUT.put_line(professorID || ' / ' || courseUPPERID ||
    	' / ' || courseIDNO || ' / ' || courseNAME);
 	
-	/*잘못된 과목 이름*/
+	/*잘못된 과목 번호*/
 	IF IS_NUMBER(SUBSTR(courseID,2,3)) != 1 THEN
 		RAISE wrong_course_id;
 	END IF;

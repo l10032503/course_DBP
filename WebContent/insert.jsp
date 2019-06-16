@@ -300,15 +300,15 @@
   <td align="center"><%= c_credit %></td>
   <td align="center"><%= c_current %></td>
   <td align="center"><%= c_max %></td>
-  <%
+<%
   	if(year_semester == 201902 && isLeaved == 0 && session_id.length() == 7){
-  		%>
+%>
   		<td align="center"><a href="insert_verify.jsp?c_id=<%= c_id %>&c_id_no=<%= c_number %>">신청</a></td>
-  		<%
+<%
   	}else{ //지난학기 과목이거나 휴학상태면 신청불가
-	  %>
+%>
 	  <td align="center">신청불가</td> 
-  		<%
+<%
   }
 %>
 </tr>
